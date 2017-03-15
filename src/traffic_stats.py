@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-from flask import Flask
-import sqlite3
+from flask import Flask, jsonify, make_response, abort
 from contextlib import closing
+import sqlite3
 
 # configuration
 #DATABASE = ':memory:'
@@ -38,11 +38,18 @@ def find_road(road):
         cur = conn.cursor()
         cur.execute('select * from traffic where Road = ?', (road,))
         return [dict(zip(names, row)) for row in cur.fetchall()]
-    
 
-@app.route('/')
-def index():
-    return "Hello, World!"
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found'}), 404) 
+
+@app.route('/traffic_stats/api/v1.0/roads/<string:road>', methods=['GET'])
+def index(road):
+    records = find_road(road)
+    if not records:
+        abort(404)
+    return jsonify(records)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
