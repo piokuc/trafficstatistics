@@ -1,0 +1,5 @@
+flask==0.12
+pyshp==1.2.10
+shapely
+pyproj
+

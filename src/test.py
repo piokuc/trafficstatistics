@@ -3,6 +3,9 @@ import traffic_stats
 import unittest
 import tempfile
 import json
+import pprint
+
+pp = pprint.PrettyPrinter(indent=4)
 
 COLUMN_NAMES = """AADFYear,CP,Estimation_method,Estimation_method_detailed,Region,LocalAuthority,Road,RoadCategory,Easting,Northing,StartJunction,EndJunction,LinkLength_km,LinkLength_miles,PedalCycles,Motorcycles,CarsTaxis,BusesCoaches,LightGoodsVehicles,V2AxleRigidHGV,V3AxleRigidHGV,V4or5AxleRigidHGV,V3or4AxleArticHGV,V5AxleArticHGV,V6orMoreAxleArticHGV,AllHGVs,AllMotorVehicles""".split(',')
 
@@ -19,9 +22,18 @@ class TrafficTestCase(unittest.TestCase):
         os.unlink(traffic_stats.app.config['DATABASE'])
 
     def test_roads(self):
-        rv = self.app.get('/traffic_stats/api/v1.0/roads/A3079')
+        rv = self.app.get('/api/v1.0/roads/A3079')
         r = json.loads(rv.data)
         self.assertEqual(len(r), 16)
+
+    def test_wards(self):
+        rv = self.app.get('/api/v1.0/wards/Appledore')
+        r = json.loads(rv.data)
+        self.assertEqual(len(r), 16)
+        rv = self.app.get('/api/v1.0/wards/Yeo')
+        r = json.loads(rv.data)
+        self.assertEqual(len(r), 32)
+        #pp.pprint ([(v['AADFYear'],v['CP']) for v in r])
 
     def test_column_names(self):
         self.assertEqual(COLUMN_NAMES, traffic_stats.column_names())
