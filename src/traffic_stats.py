@@ -3,6 +3,7 @@
 from flask import Flask, jsonify, make_response, abort
 from contextlib import closing
 import sqlite3
+import os
 
 # configuration
 #DATABASE = ':memory:'
@@ -96,4 +97,4 @@ def documentation():
     """
 
 if __name__ == '__main__':
-    app.run() # (debug=True)
+    app.run(**(os.getenv('EC2_HOME') and {host='0.0.0.0',port=80} : {debug=True}))
