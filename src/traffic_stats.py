@@ -97,4 +97,4 @@ def documentation():
     """
 
 if __name__ == '__main__':
-    app.run(**(os.getenv('EC2_HOME') and {host='0.0.0.0',port=80} : {debug=True}))
+    app.run(**(os.getenv('EC2_HOME') and {host:'0.0.0.0',port:80} or {debug:True}))
