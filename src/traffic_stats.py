@@ -69,5 +69,31 @@ def wards(ward):
     if not records: abort(404)
     return jsonify(records)
 
+@app.route('/', methods=['GET'])
+def documentation():
+    return """
+    <html>
+    <head><title>trafficstatistics.uk API documentation</title></head>
+
+    <body>
+
+    <h1> Examples:
+
+    <ul>
+    <li> Browse data by road:
+    <a href="http://trafficstatistics.uk/api/v1.0/roads/A348">http://trafficstatistics.uk/api/v1.0/roads/A348</a>
+    </li>
+
+    <li> Browse data by ward:
+    <a href="http://trafficstatistics.uk/api/v1.0/wards/Yeo">http://trafficstatistics.uk/api/v1.0/wards/Yeo</a>
+    </li>
+
+
+    </ul>
+    </body>
+
+    </html>
+    """
+
 if __name__ == '__main__':
     app.run() # (debug=True)
