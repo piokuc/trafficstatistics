@@ -79,7 +79,7 @@ def list_wards():
 
 @app.route('/api/v1.0/list/junctions', methods=['GET'])
 def list_junctions():
-    return jsonify([r for r in sql('select distinct StartJunction,EndJunction from traffic where StartJunction is not NULL and EndJunction is not NULL order by 1,2')])
+    return jsonify([r for r in sql('select distinct StartJunction,EndJunction from traffic order by 1,2')])
 
 def link(description, url): return description, html.a(href=url)(url)
 def ul(*lis): return html.ul(*[html.li(e) + '\n' for e in lis])
@@ -88,13 +88,16 @@ def ul(*lis): return html.ul(*[html.li(e) + '\n' for e in lis])
 def documentation():
     return html.html(
         html.head(html.title('trafficstatistics.uk API documentation')),
-        html.body(html.h1("Traffic statistics API Examples"),
+        html.body(
+            html.h1("Traffic statistics API examples"),
             ul(
                link("Browse data by road:",   "http://trafficstatistics.uk/api/v1.0/roads/M5"),
                link("Browse data by ward:",   "http://trafficstatistics.uk/api/v1.0/wards/Yeo"),
                link("Get list of roads:",     "http://trafficstatistics.uk/api/v1.0/list/roads"),
                link("Get list of wards:",     "http://trafficstatistics.uk/api/v1.0/list/wards"),
-               link("Get list of junctions:", "http://trafficstatistics.uk/api/v1.0/list/junctions"))))
+               link("Get list of junctions:", "http://trafficstatistics.uk/api/v1.0/list/junctions")),
+            "Author: ", html.a(href="http://kuchta.co.uk")("Peter Kuchta")
+        ))
 
 if __name__ == '__main__':
     app.run(**((not os.getenv('EDITOR')) and {'host':'0.0.0.0','port':80} or {'debug':True}))
