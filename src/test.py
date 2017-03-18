@@ -35,6 +35,18 @@ class TrafficTestCase(unittest.TestCase):
         self.assertEqual(len(r), 32)
         #pp.pprint ([(v['AADFYear'],v['CP']) for v in r])
 
+    def test_list_wards(self):
+        rv = self.app.get('/api/v1.0/list/wards')
+        r = json.loads(rv.data)
+        self.assertEqual(len(r),120)
+        self.assertTrue(u'Loddiswell & Aveton Gifford' in r)
+
+    def test_list_roads(self):
+        rv = self.app.get('/api/v1.0/list/roads')
+        r = json.loads(rv.data)
+        self.assertEqual(len(r),34)
+        self.assertTrue(u'M5' in r)
+
     def test_column_names(self):
         self.assertEqual(COLUMN_NAMES, traffic_stats.column_names())
 

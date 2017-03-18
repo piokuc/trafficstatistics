@@ -2,6 +2,7 @@
 
 from flask import Flask, jsonify, make_response, abort
 from contextlib import closing
+from collections import OrderedDict
 import sqlite3
 import os
 
@@ -27,31 +28,28 @@ def init_db():
 
 init_db()
 
-def column_names():
+def sql(*args):
     with closing(connect_db()) as conn:
         cur = conn.cursor()
-        cur.execute('PRAGMA table_info(traffic);')
-        return [ci[1] for ci in cur.fetchall()]
+        cur.execute(*args)
+        return cur.fetchall()
+
+def column_names():
+    return [ci[1] for ci in sql('PRAGMA table_info(traffic);')]
 
 def find_road(road):
-    names = column_names()
-    with closing(connect_db()) as conn:
-        cur = conn.cursor()
-        cur.execute('select * from traffic where Road = ?', (road,))
-        return [dict(zip(names, row)) for row in cur.fetchall()]
+    return [OrderedDict(zip(column_names(), row)) for row in sql('select * from traffic where Road = ?', (road,))]
 
 def find_ward(ward):
     traffic_names = column_names()
     names = traffic_names + ['ward', 'district']
     qualified_names = ['traffic.' + c for c in column_names()] + ['ward', 'district']
-    with closing(connect_db()) as conn:
-        cur = conn.cursor()
-        cur.execute('select ' + ','.join(qualified_names) + 
-                    ''' from traffic,wards 
-                        where traffic.cp == wards.cp and wards.ward = ?
-                        order by AADFYear;
-                    ''', (ward,))
-        return [dict(zip(names, row)) for row in cur.fetchall()]
+    s = 'select ' + ','.join(qualified_names) + \
+        ''' from traffic, wards 
+            where traffic.cp == wards.cp and wards.ward = ?
+            order by AADFYear;
+        '''
+    return [OrderedDict(zip(names,row)) for row in sql(s, (ward,))]
     
 
 @app.errorhandler(404)
@@ -70,6 +68,14 @@ def wards(ward):
     if not records: abort(404)
     return jsonify(records)
 
+@app.route('/api/v1.0/list/roads', methods=['GET'])
+def list_roads():
+    return jsonify([r[0] for r in sql('select distinct Road from traffic')])
+    
+@app.route('/api/v1.0/list/wards', methods=['GET'])
+def list_wards():
+    return jsonify([r[0] for r in sql('select distinct ward from wards')])
+
 @app.route('/', methods=['GET'])
 def documentation():
     return """
@@ -78,15 +84,23 @@ def documentation():
 
     <body>
 
-    <h1> Examples:
+    <h1> Examples </h1>
 
     <ul>
     <li> Browse data by road:
-    <a href="http://trafficstatistics.uk/api/v1.0/roads/A348">http://trafficstatistics.uk/api/v1.0/roads/A348</a>
+    <a href="http://trafficstatistics.uk/api/v1.0/roads/M5">http://trafficstatistics.uk/api/v1.0/roads/M5</a>
     </li>
 
     <li> Browse data by ward:
     <a href="http://trafficstatistics.uk/api/v1.0/wards/Yeo">http://trafficstatistics.uk/api/v1.0/wards/Yeo</a>
+    </li>
+
+    <li> Get list of roads:
+    <a href="http://trafficstatistics.uk/api/v1.0/list/roads">http://trafficstatistics.uk/api/v1.0/list/roads</a>
+    </li>
+
+    <li> Get list of wards:
+    <a href="http://trafficstatistics.uk/api/v1.0/list/wards">http://trafficstatistics.uk/api/v1.0/list/wards</a>
     </li>
 
 
@@ -97,4 +111,4 @@ def documentation():
     """
 
 if __name__ == '__main__':
-    app.run(**(os.getenv('EC2_HOME') and {host:'0.0.0.0',port:80} or {debug:True}))
+    app.run(**(os.getenv('EC2_HOME') and {'host':'0.0.0.0','port':80} or {'debug':True}))
