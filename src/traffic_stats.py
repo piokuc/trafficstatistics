@@ -111,4 +111,4 @@ def documentation():
     """
 
 if __name__ == '__main__':
-    app.run(**(('redhat' in os.getenv('MACHTYPE')) and {'host':'0.0.0.0','port':80} or {'debug':True}))
+    app.run(**((not os.getenv('EDITOR')) and {'host':'0.0.0.0','port':80} or {'debug':True}))
