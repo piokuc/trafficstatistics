@@ -20,7 +20,7 @@ if os.getenv('EDITOR'):
 
 else:
     import psycopg2
-    DATABASE = read('PG_CONNECTION').read()
+    DATABASE = open('PG_CONNECTION').read()
     def connect_db(): return psycopg2.connect(DATABASE)
 
 
