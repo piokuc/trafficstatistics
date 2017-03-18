@@ -1,48 +1,19 @@
 #!/usr/bin/env python
 
 from flask import Flask, jsonify, make_response, abort
-from contextlib import closing
 from collections import OrderedDict
-import sqlite3
 import os
 from html import html
-
-# configuration
-#DATABASE = ':memory:'
-DATABASE = '/tmp/traffic.sqlite'
+from db import sql, traffic_columns
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-def connect_db(): 
-    return sqlite3.connect(app.config['DATABASE'])
-
-def init_db():
-    try:
-        with closing(connect_db()) as conn:
-            with app.open_resource('traffic.sql', mode='r') as f:
-                script = f.read()
-                conn.cursor().executescript(script)
-            conn.commit()
-    except sqlite3.OperationalError as e:
-        assert 'already exists' in e.message 
-
-init_db()
-
-def sql(*args):
-    with closing(connect_db()) as conn:
-        cur = conn.cursor()
-        cur.execute(*args)
-        return cur.fetchall()
-
-def column_names():
-    return [ci[1] for ci in sql('PRAGMA table_info(traffic);')]
-
 def find_road(road):
-    return [OrderedDict(zip(column_names(), row)) for row in sql('select * from traffic where Road = ?', (road,))]
+    return [OrderedDict(zip(traffic_columns(), row)) for row in sql('select * from traffic where Road = ?', (road,))]
 
 def find_ward(ward):
-    traffic_names = column_names()
+    traffic_names = traffic_columns()
     qualified_names = ['traffic.' + c for c in traffic_names] + ['ward', 'district']
     s = 'select ' + ','.join(qualified_names) + \
         ''' from traffic, wards 

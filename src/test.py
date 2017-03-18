@@ -7,19 +7,19 @@ import pprint
 
 pp = pprint.PrettyPrinter(indent=4)
 
-COLUMN_NAMES = """AADFYear,CP,Estimation_method,Estimation_method_detailed,Region,LocalAuthority,Road,RoadCategory,Easting,Northing,StartJunction,EndJunction,LinkLength_km,LinkLength_miles,PedalCycles,Motorcycles,CarsTaxis,BusesCoaches,LightGoodsVehicles,V2AxleRigidHGV,V3AxleRigidHGV,V4or5AxleRigidHGV,V3or4AxleArticHGV,V5AxleArticHGV,V6orMoreAxleArticHGV,AllHGVs,AllMotorVehicles""".split(',')
-
 class TrafficTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.db_fd, traffic_stats.app.config['DATABASE'] = tempfile.mkstemp()
+        pass
+        #self.db_fd, traffic_stats.app.config['DATABASE'] = tempfile.mkstemp()
         traffic_stats.app.config['TESTING'] = True
         self.app = traffic_stats.app.test_client()
-        traffic_stats.init_db()
+        #traffic_stats.init_db()
 
     def tearDown(self):
-        os.close(self.db_fd)
-        os.unlink(traffic_stats.app.config['DATABASE'])
+        pass
+        #os.close(self.db_fd)
+        #os.unlink(traffic_stats.app.config['DATABASE'])
 
     def test_roads(self):
         rv = self.app.get('/api/v1.0/roads/A3079')
@@ -52,9 +52,6 @@ class TrafficTestCase(unittest.TestCase):
         r = json.loads(rv.data)
         self.assertEqual(len(r),263)
         self.assertTrue([u'Whiddon Drive', u'A361'] in r)
-
-    def test_column_names(self):
-        self.assertEqual(COLUMN_NAMES, traffic_stats.column_names())
 
     def test_find_road(self):
         self.assertEqual(len(traffic_stats.find_road('A3079')), 16)
