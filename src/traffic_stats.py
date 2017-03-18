@@ -5,6 +5,7 @@ from contextlib import closing
 from collections import OrderedDict
 import sqlite3
 import os
+from html import html
 
 # configuration
 #DATABASE = ':memory:'
@@ -42,13 +43,13 @@ def find_road(road):
 
 def find_ward(ward):
     traffic_names = column_names()
-    names = traffic_names + ['ward', 'district']
-    qualified_names = ['traffic.' + c for c in column_names()] + ['ward', 'district']
+    qualified_names = ['traffic.' + c for c in traffic_names] + ['ward', 'district']
     s = 'select ' + ','.join(qualified_names) + \
         ''' from traffic, wards 
             where traffic.cp == wards.cp and wards.ward = ?
             order by AADFYear;
         '''
+    names = traffic_names + ['ward', 'district']
     return [OrderedDict(zip(names,row)) for row in sql(s, (ward,))]
     
 
@@ -78,44 +79,22 @@ def list_wards():
 
 @app.route('/api/v1.0/list/junctions', methods=['GET'])
 def list_junctions():
-    return jsonify([r for r in sql('select distinct StartJunction,EndJunction from traffic order by 1,2')])
+    return jsonify([r for r in sql('select distinct StartJunction,EndJunction from traffic where StartJunction is not NULL and EndJunction is not NULL order by 1,2')])
+
+def link(description, url): return description, html.a(href=url)(url)
+def ul(*lis): return html.ul(*[html.li(e) + '\n' for e in lis])
 
 @app.route('/', methods=['GET'])
 def documentation():
-    return """
-    <html>
-    <head><title>trafficstatistics.uk API documentation</title></head>
-
-    <body>
-
-    <h1> Examples </h1>
-
-    <ul>
-    <li> Browse data by road:
-    <a href="http://trafficstatistics.uk/api/v1.0/roads/M5">http://trafficstatistics.uk/api/v1.0/roads/M5</a>
-    </li>
-
-    <li> Browse data by ward:
-    <a href="http://trafficstatistics.uk/api/v1.0/wards/Yeo">http://trafficstatistics.uk/api/v1.0/wards/Yeo</a>
-    </li>
-
-    <li> Get list of roads:
-    <a href="http://trafficstatistics.uk/api/v1.0/list/roads">http://trafficstatistics.uk/api/v1.0/list/roads</a>
-    </li>
-
-    <li> Get list of wards:
-    <a href="http://trafficstatistics.uk/api/v1.0/list/wards">http://trafficstatistics.uk/api/v1.0/list/wards</a>
-    </li>
-
-    <li> Get list of junctions:
-    <a href="http://trafficstatistics.uk/api/v1.0/list/junctions">http://trafficstatistics.uk/api/v1.0/list/junctions</a>
-    </li>
-
-    </ul>
-    </body>
-
-    </html>
-    """
+    return html.html(
+        html.head(html.title('trafficstatistics.uk API documentation')),
+        html.body(html.h1("Traffic statistics API Examples"),
+            ul(
+               link("Browse data by road:",   "http://trafficstatistics.uk/api/v1.0/roads/M5"),
+               link("Browse data by ward:",   "http://trafficstatistics.uk/api/v1.0/wards/Yeo"),
+               link("Get list of roads:",     "http://trafficstatistics.uk/api/v1.0/list/roads"),
+               link("Get list of wards:",     "http://trafficstatistics.uk/api/v1.0/list/wards"),
+               link("Get list of junctions:", "http://trafficstatistics.uk/api/v1.0/list/junctions"))))
 
 if __name__ == '__main__':
     app.run(**((not os.getenv('EDITOR')) and {'host':'0.0.0.0','port':80} or {'debug':True}))
