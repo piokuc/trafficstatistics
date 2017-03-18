@@ -76,6 +76,10 @@ def list_roads():
 def list_wards():
     return jsonify([r[0] for r in sql('select distinct ward from wards')])
 
+@app.route('/api/v1.0/list/junctions', methods=['GET'])
+def list_junctions():
+    return jsonify([r for r in sql('select distinct StartJunction,EndJunction from traffic order by 1,2')])
+
 @app.route('/', methods=['GET'])
 def documentation():
     return """
@@ -103,6 +107,9 @@ def documentation():
     <a href="http://trafficstatistics.uk/api/v1.0/list/wards">http://trafficstatistics.uk/api/v1.0/list/wards</a>
     </li>
 
+    <li> Get list of junctions:
+    <a href="http://trafficstatistics.uk/api/v1.0/list/junctions">http://trafficstatistics.uk/api/v1.0/list/junctions</a>
+    </li>
 
     </ul>
     </body>

@@ -47,12 +47,17 @@ class TrafficTestCase(unittest.TestCase):
         self.assertEqual(len(r),34)
         self.assertTrue(u'M5' in r)
 
+    def test_list_junctions(self):
+        rv = self.app.get('/api/v1.0/list/junctions')
+        r = json.loads(rv.data)
+        self.assertEqual(len(r),263)
+        self.assertTrue([u'Whiddon Drive', u'A361'] in r)
+
     def test_column_names(self):
         self.assertEqual(COLUMN_NAMES, traffic_stats.column_names())
 
     def test_find_road(self):
         self.assertEqual(len(traffic_stats.find_road('A3079')), 16)
-        
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
