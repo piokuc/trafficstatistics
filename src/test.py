@@ -4,6 +4,7 @@ import unittest
 import tempfile
 import json
 import pprint
+import urllib
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -34,6 +35,14 @@ class TrafficTestCase(unittest.TestCase):
         r = json.loads(rv.data)
         self.assertEqual(len(r), 32)
         #pp.pprint ([(v['AADFYear'],v['CP']) for v in r])
+
+    def test_filter(self):
+        params = {'StartJunction' : "A380/A383", 'EndJunction' : "Broadmeadow Lane, Teignmouth"}
+        url = '/api/v1.0/filter?' + urllib.urlencode(params)
+        print url
+        rv = self.app.get(url)
+        r = json.loads(rv.data)
+        self.assertEqual(len(r), 16)
 
     def test_list_wards(self):
         rv = self.app.get('/api/v1.0/list/wards')

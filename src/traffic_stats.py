@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from flask import Flask, jsonify, make_response, abort
+from flask import Flask, jsonify, make_response, abort, request
 from collections import OrderedDict
 import os
 from html import html
@@ -22,7 +22,19 @@ def find_ward(ward):
         '''
     names = traffic_names + ['ward', 'district']
     return [OrderedDict(zip(names,row)) for row in sql(s, (ward,))]
-    
+
+def find_records(criteria):
+    def low(s): return set([e.lower() for e in s])
+    if not low(criteria.keys()).issubset(low(traffic_columns())):
+        return None
+    # TODO: add ward and district to select list
+    q = 'select * from traffic '
+    keys = criteria.keys()
+    where = ' and '.join(k + ' = ?' for k in keys)
+    params = tuple(criteria[k] for k in keys)
+    if where: 
+        q += ' where ' + where
+    return [OrderedDict(zip(traffic_columns(),row)) for row in sql(q, params)]
 
 @app.errorhandler(404)
 def not_found(error):
@@ -37,6 +49,12 @@ def roads(road):
 @app.route('/api/v1.0/wards/<string:ward>', methods=['GET'])
 def wards(ward):
     records = find_ward(ward)
+    if not records: abort(404)
+    return jsonify(records)
+
+@app.route('/api/v1.0/filter', methods=['GET'])
+def filter():
+    records = find_records(request.args.to_dict())
     if not records: abort(404)
     return jsonify(records)
 
@@ -64,6 +82,8 @@ def documentation():
             ul(
                link("Browse data by road:",   "http://trafficstatistics.uk/api/v1.0/roads/M5"),
                link("Browse data by ward:",   "http://trafficstatistics.uk/api/v1.0/wards/Yeo"),
+               link("Filter data according to criteria", 
+                    "/api/v1.0/filter?EndJunction=Broadmeadow+Lane%2C+Teignmouth&StartJunction=A380%2FA383"),
                link("Get list of roads:",     "http://trafficstatistics.uk/api/v1.0/list/roads"),
                link("Get list of wards:",     "http://trafficstatistics.uk/api/v1.0/list/wards"),
                link("Get list of junctions:", "http://trafficstatistics.uk/api/v1.0/list/junctions")),
