@@ -11,16 +11,11 @@ pp = pprint.PrettyPrinter(indent=4)
 class TrafficTestCase(unittest.TestCase):
 
     def setUp(self):
-        pass
-        #self.db_fd, traffic_stats.app.config['DATABASE'] = tempfile.mkstemp()
         traffic_stats.app.config['TESTING'] = True
         self.app = traffic_stats.app.test_client()
-        #traffic_stats.init_db()
 
     def tearDown(self):
         pass
-        #os.close(self.db_fd)
-        #os.unlink(traffic_stats.app.config['DATABASE'])
 
     def test_roads(self):
         rv = self.app.get('/api/v1.0/roads/A3079')
@@ -31,18 +26,24 @@ class TrafficTestCase(unittest.TestCase):
         rv = self.app.get('/api/v1.0/wards/Appledore')
         r = json.loads(rv.data)
         self.assertEqual(len(r), 16)
+        for e in r: self.assertEqual(e['ward'], 'Appledore')
         rv = self.app.get('/api/v1.0/wards/Yeo')
         r = json.loads(rv.data)
         self.assertEqual(len(r), 32)
-        #pp.pprint ([(v['AADFYear'],v['CP']) for v in r])
+        for e in r: self.assertEqual(e['ward'], 'Yeo')
 
     def test_filter(self):
-        params = {'StartJunction' : "A380/A383", 'EndJunction' : "Broadmeadow Lane, Teignmouth"}
+        params = {'StartJunction' : "A380/A383",
+                  'EndJunction' : "Broadmeadow Lane, Teignmouth",
+                  'AADFYear' : '2015'}
         url = '/api/v1.0/filter?' + urllib.urlencode(params)
-        print url
         rv = self.app.get(url)
         r = json.loads(rv.data)
-        self.assertEqual(len(r), 16)
+        self.assertEqual(len(r), 1)
+        for e in r:
+            self.assertEqual(e['StartJunction'], "A380/A383")
+            self.assertEqual(e['EndJunction'], "Broadmeadow Lane, Teignmouth")
+            self.assertEqual(e['AADFYear'], 2015)
 
     def test_list_wards(self):
         rv = self.app.get('/api/v1.0/list/wards')

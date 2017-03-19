@@ -12,29 +12,39 @@ app.config.from_object(__name__)
 def find_road(road):
     return [OrderedDict(zip(traffic_columns(), row)) for row in sql('select * from traffic where Road = ?', (road,))]
 
+def qualified_columns():
+    return ['traffic.' + c for c in traffic_columns()] + ['wards.ward', 'wards.district']
+
 def find_ward(ward):
-    traffic_names = traffic_columns()
-    qualified_names = ['traffic.' + c for c in traffic_names] + ['ward', 'district']
-    s = 'select ' + ','.join(qualified_names) + \
+    s = 'select ' + ','.join(qualified_columns()) + \
         ''' from traffic, wards 
             where traffic.cp = wards.cp and wards.ward = ?
             order by AADFYear;
         '''
-    names = traffic_names + ['ward', 'district']
+    names = traffic_columns() + ['ward', 'district']
     return [OrderedDict(zip(names,row)) for row in sql(s, (ward,))]
 
 def find_records(criteria):
     def low(s): return set([e.lower() for e in s])
-    if not low(criteria.keys()).issubset(low(traffic_columns())):
+    def qualify(k):
+        if k.lower() in low(traffic_columns()): return 'traffic.' + k
+        elif k.lower() in low(['ward','district']): return 'wards.' + k
+
+    # Only parameters that are column names allowed
+    if not low(criteria.keys()).issubset(low(traffic_columns() + ['ward','district'])):
         return None
-    # TODO: add ward and district to select list
-    q = 'select * from traffic '
+
     keys = criteria.keys()
-    where = ' and '.join(k + ' = ?' for k in keys)
+    where = ' and '.join(qualify(k) + ' = ?' for k in keys)
+
+    q = 'select ' + ','.join(qualified_columns()) + ' from traffic, wards '
+    q += ' where traffic.cp = wards.cp ' 
+    if where:
+        q += ' and ' + where
+
+    names = traffic_columns() + ['ward', 'district']
     params = tuple(criteria[k] for k in keys)
-    if where: 
-        q += ' where ' + where
-    return [OrderedDict(zip(traffic_columns(),row)) for row in sql(q, params)]
+    return [OrderedDict(zip(names,row)) for row in sql(q, params)]
 
 @app.errorhandler(404)
 def not_found(error):
