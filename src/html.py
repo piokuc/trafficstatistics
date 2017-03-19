@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
-""" This module provides HTML rendering.
+""" 
+This module provides HTML rendering.
+It's only used to generate some API examples at http://trafficstatistics.uk/
 """
 
 def attr_string(attrs):

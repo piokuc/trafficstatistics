@@ -1,7 +1,19 @@
 import os
 from contextlib import closing
+import config
 
-if os.getenv('EDITOR'):
+"""
+This module provides an abstraction layer over 
+currently used databases: sqlite3 and PostrgreSQL
+
+At present sqlite3 is used in the development,
+PostgreSQL in production: http://trafficstatistics.uk/api/v1.0/list/wards
+"""
+
+def traffic_columns():
+    return """AADFYear,CP,Estimation_method,Estimation_method_detailed,Region,LocalAuthority,Road,RoadCategory,Easting,Northing,StartJunction,EndJunction,LinkLength_km,LinkLength_miles,PedalCycles,Motorcycles,CarsTaxis,BusesCoaches,LightGoodsVehicles,V2AxleRigidHGV,V3AxleRigidHGV,V4or5AxleRigidHGV,V3or4AxleArticHGV,V5AxleArticHGV,V6orMoreAxleArticHGV,AllHGVs,AllMotorVehicles""".split(',')
+
+if config.development_mode():
     import sqlite3
     DATABASE = '/tmp/traffic.sqlite'
 
@@ -24,10 +36,6 @@ else:
     DATABASE = open('PG_CONNECTION').read()
     def patch_prepared(s): return s.replace('?','%s')
     def connect_db(): return psycopg2.connect(DATABASE)
-
-
-def traffic_columns():
-    return """AADFYear,CP,Estimation_method,Estimation_method_detailed,Region,LocalAuthority,Road,RoadCategory,Easting,Northing,StartJunction,EndJunction,LinkLength_km,LinkLength_miles,PedalCycles,Motorcycles,CarsTaxis,BusesCoaches,LightGoodsVehicles,V2AxleRigidHGV,V3AxleRigidHGV,V4or5AxleRigidHGV,V3or4AxleArticHGV,V5AxleArticHGV,V6orMoreAxleArticHGV,AllHGVs,AllMotorVehicles""".split(',')
 
 def sql(*args):
     with closing(connect_db()) as conn:

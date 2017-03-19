@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 
+"""
+Implementaiton of the REST API using Flask.
+"""
+
 from flask import Flask, jsonify, make_response, abort, request
 from collections import OrderedDict
 import os
 from html import html
 from db import sql, traffic_columns
+import config
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -30,7 +35,7 @@ def find_records(criteria):
         if k.lower() in low(traffic_columns()): return 'traffic.' + k
         elif k.lower() in low(['ward','district']): return 'wards.' + k
 
-    # Only parameters that are column names allowed
+    # Only parameters that are known column names allowed
     if not low(criteria.keys()).issubset(low(traffic_columns() + ['ward','district'])):
         return None
 
@@ -45,6 +50,8 @@ def find_records(criteria):
     names = traffic_columns() + ['ward', 'district']
     params = tuple(criteria[k] for k in keys)
     return [OrderedDict(zip(names,row)) for row in sql(q, params)]
+
+### Implementation of the API
 
 @app.errorhandler(404)
 def not_found(error):
@@ -80,11 +87,10 @@ def list_wards():
 def list_junctions():
     return jsonify([r for r in sql('select distinct StartJunction,EndJunction from traffic order by 1,2')])
 
-def link(description, url): return description, html.a(href=url)(url)
-def ul(*lis): return html.ul(*[html.li(e) + '\n' for e in lis])
-
 @app.route('/', methods=['GET'])
 def documentation():
+    def link(description, url): return description, html.a(href=url)(url)
+    def ul(*lis): return html.ul(*[html.li(e) + '\n' for e in lis])
     return html.html(
         html.head(html.title('trafficstatistics.uk API documentation')),
         html.body(
@@ -101,4 +107,4 @@ def documentation():
         ))
 
 if __name__ == '__main__':
-    app.run(**((not os.getenv('EDITOR')) and {'host':'0.0.0.0','port':80} or {'debug':True}))
+    app.run(**((not config.development_mode()) and {'host':'0.0.0.0','port':80} or {'debug':True}))
