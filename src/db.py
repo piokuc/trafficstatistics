@@ -5,6 +5,7 @@ if os.getenv('EDITOR'):
     import sqlite3
     DATABASE = '/tmp/traffic.sqlite'
 
+    def patch_prepared(s): return s
     def connect_db(): return sqlite3.connect(DATABASE)
 
     def init_db():
@@ -21,6 +22,7 @@ if os.getenv('EDITOR'):
 else:
     import psycopg2
     DATABASE = open('PG_CONNECTION').read()
+    def patch_prepared(s): return s.replace('?','%s')
     def connect_db(): return psycopg2.connect(DATABASE)
 
 
@@ -30,5 +32,5 @@ def traffic_columns():
 def sql(*args):
     with closing(connect_db()) as conn:
         cur = conn.cursor()
-        cur.execute(*args)
+        cur.execute(patch_prepared(args[0]), *args[1:])
         return cur.fetchall()

@@ -17,7 +17,7 @@ def find_ward(ward):
     qualified_names = ['traffic.' + c for c in traffic_names] + ['ward', 'district']
     s = 'select ' + ','.join(qualified_names) + \
         ''' from traffic, wards 
-            where traffic.cp == wards.cp and wards.ward = ?
+            where traffic.cp = wards.cp and wards.ward = ?
             order by AADFYear;
         '''
     names = traffic_names + ['ward', 'district']
