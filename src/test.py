@@ -45,6 +45,26 @@ class TrafficTestCase(unittest.TestCase):
             self.assertEqual(e['EndJunction'], "Broadmeadow Lane, Teignmouth")
             self.assertEqual(e['AADFYear'], 2015)
 
+    def test_filter_by_ward(self):
+        params = {'ward' : "Chudleigh", 'AADFYear' : '2015'}
+        url = '/api/v1.0/filter?' + urllib.urlencode(params)
+        rv = self.app.get(url)
+        r = json.loads(rv.data)
+        self.assertEqual(len(r), 2)
+        for e in r:
+            self.assertEqual(e['ward'], "Chudleigh")
+            self.assertEqual(e['AADFYear'], 2015)
+
+    def test_filter_by_district(self):
+        params = {'district' : "Exeter", 'AADFYear' : '2015'}
+        url = '/api/v1.0/filter?' + urllib.urlencode(params)
+        rv = self.app.get(url)
+        r = json.loads(rv.data)
+        self.assertEqual(len(r), 13)
+        for e in r:
+            self.assertEqual(e['district'], "Exeter")
+            self.assertEqual(e['AADFYear'], 2015)
+
     def test_list_wards(self):
         rv = self.app.get('/api/v1.0/list/wards')
         r = json.loads(rv.data)
