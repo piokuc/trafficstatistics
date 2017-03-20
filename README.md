@@ -37,13 +37,13 @@ The traffic statistics REST API http://trafficstatistics.uk/
 provides read only access to annual average daily flow (AADF) data 
 available from [Department for Transport](https://www.dft.gov.uk/traffic-counts/about.php).
 
-Currently it serves only [Devon](http://api.dft.gov.uk/v2/trafficcounts/export/la/Devon.csv data).
+Currently it serves only [Devon data](http://api.dft.gov.uk/v2/trafficcounts/export/la/Devon.csv).
 
 Full description of the orignal dataset's metadata is described [here](http://data.dft.gov.uk/gb-traffic-matrix/aadf-majorroads-metadata.pdf)
 
 API is read only and does not require any authentication. Only GET method is supported.
 
-All APIs apart from /api/v1.0/list/{roads|wards|junctions} 
+All APIs apart from `/api/v1.0/list/{roads|wards|junctions}`
 return list of dictionaries in the JSON format, 
 with keys being column names of the original CSV 
 file and values corresponding to values in appropriate rows.
@@ -70,9 +70,11 @@ The only allowed parameters are the ones appearing in the dataset's metadata tab
 Result will be a list of records that match the parameters.
 
 *  **Example**
-` $ curl "http://trafficstatistics.uk/api/v1.0/filter?AADFYear=2015&ward=Yarty"`
+
+    ` $ curl "http://trafficstatistics.uk/api/v1.0/filter?AADFYear=2015&ward=Yarty"`
                                  
 * **Code:** `200` 
+
 **Content:** 
 ```
 [
