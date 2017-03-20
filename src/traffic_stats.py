@@ -8,17 +8,28 @@ from flask import Flask, jsonify, make_response, abort, request
 from collections import OrderedDict
 import os
 from html import html
-from db import sql, traffic_columns
+from db import sql, traffic_columns, wards_columns, all_columns
 import config
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-def find_road(road):
-    return [OrderedDict(zip(traffic_columns(), row)) for row in sql('select * from traffic where Road = ?', (road,))]
+# Utility functions
+def low(s): return set([e.lower() for e in s])
+
+def qualify(c):
+    if c.lower() in low(traffic_columns()): return 'traffic.' + c
+    elif c.lower() in low(wards_columns()): return 'wards.' + c
+
+def dictionary(names, values): return OrderedDict(zip(names, values))
 
 def qualified_columns():
-    return ['traffic.' + c for c in traffic_columns()] + ['wards.ward', 'wards.district']
+    return [qualify(k) for k in all_columns()]
+
+
+### Implementation of the API
+def find_road(road):
+    return [dictionary(traffic_columns(), row) for row in sql('select * from traffic where Road = ?', (road,))]
 
 def find_ward(ward):
     s = 'select ' + ','.join(qualified_columns()) + \
@@ -26,17 +37,11 @@ def find_ward(ward):
             where traffic.cp = wards.cp and wards.ward = ?
             order by AADFYear;
         '''
-    names = traffic_columns() + ['ward', 'district']
-    return [OrderedDict(zip(names,row)) for row in sql(s, (ward,))]
+    return [dictionary(all_columns(), row) for row in sql(s, (ward,))]
 
 def find_records(criteria):
-    def low(s): return set([e.lower() for e in s])
-    def qualify(k):
-        if k.lower() in low(traffic_columns()): return 'traffic.' + k
-        elif k.lower() in low(['ward','district']): return 'wards.' + k
-
     # Only parameters that are known column names allowed
-    if not low(criteria.keys()).issubset(low(traffic_columns() + ['ward','district'])):
+    if not low(criteria.keys()).issubset(low(all_columns())):
         return None
 
     keys = criteria.keys()
@@ -47,11 +52,9 @@ def find_records(criteria):
     if where:
         q += ' and ' + where
 
-    names = traffic_columns() + ['ward', 'district']
     params = tuple(criteria[k] for k in keys)
-    return [OrderedDict(zip(names,row)) for row in sql(q, params)]
+    return [dictionary(all_columns(),row) for row in sql(q, params)]
 
-### Implementation of the API
 
 @app.errorhandler(404)
 def not_found(error):
