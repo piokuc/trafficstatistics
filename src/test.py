@@ -17,18 +17,21 @@ class TrafficTestCase(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def get(self, url):
+        """ GET response for a given url and return parsed JSON data.
+        """
+        return json.loads(self.app.get(url).data)
+
     def test_roads(self):
-        rv = self.app.get('/api/v1.0/roads/A3079')
-        r = json.loads(rv.data)
+        r = self.get('/api/v1.0/roads/A3079')
         self.assertEqual(len(r), 16)
+        for e in r: self.assertEqual(e['Road'], 'A3079')
 
     def test_wards(self):
-        rv = self.app.get('/api/v1.0/wards/Appledore')
-        r = json.loads(rv.data)
+        r = self.get('/api/v1.0/wards/Appledore')
         self.assertEqual(len(r), 16)
         for e in r: self.assertEqual(e['ward'], 'Appledore')
-        rv = self.app.get('/api/v1.0/wards/Yeo')
-        r = json.loads(rv.data)
+        r = self.get('/api/v1.0/wards/Yeo')
         self.assertEqual(len(r), 32)
         for e in r: self.assertEqual(e['ward'], 'Yeo')
 
@@ -37,8 +40,7 @@ class TrafficTestCase(unittest.TestCase):
                   'EndJunction' : "Broadmeadow Lane, Teignmouth",
                   'AADFYear' : '2015'}
         url = '/api/v1.0/filter?' + urllib.urlencode(params)
-        rv = self.app.get(url)
-        r = json.loads(rv.data)
+        r = self.get(url)
         self.assertEqual(len(r), 1)
         for e in r:
             self.assertEqual(e['StartJunction'], "A380/A383")
@@ -48,8 +50,7 @@ class TrafficTestCase(unittest.TestCase):
     def test_filter_by_ward(self):
         params = {'ward' : "Chudleigh", 'AADFYear' : '2015'}
         url = '/api/v1.0/filter?' + urllib.urlencode(params)
-        rv = self.app.get(url)
-        r = json.loads(rv.data)
+        r = self.get(url)
         self.assertEqual(len(r), 2)
         for e in r:
             self.assertEqual(e['ward'], "Chudleigh")
@@ -58,28 +59,24 @@ class TrafficTestCase(unittest.TestCase):
     def test_filter_by_district(self):
         params = {'district' : "Exeter", 'AADFYear' : '2015'}
         url = '/api/v1.0/filter?' + urllib.urlencode(params)
-        rv = self.app.get(url)
-        r = json.loads(rv.data)
+        r = self.get(url)
         self.assertEqual(len(r), 13)
         for e in r:
             self.assertEqual(e['district'], "Exeter")
             self.assertEqual(e['AADFYear'], 2015)
 
     def test_list_wards(self):
-        rv = self.app.get('/api/v1.0/list/wards')
-        r = json.loads(rv.data)
+        r = self.get('/api/v1.0/list/wards')
         self.assertEqual(len(r),120)
         self.assertTrue(u'Loddiswell & Aveton Gifford' in r)
 
     def test_list_roads(self):
-        rv = self.app.get('/api/v1.0/list/roads')
-        r = json.loads(rv.data)
+        r = self.get('/api/v1.0/list/roads')
         self.assertEqual(len(r),34)
         self.assertTrue(u'M5' in r)
 
     def test_list_junctions(self):
-        rv = self.app.get('/api/v1.0/list/junctions')
-        r = json.loads(rv.data)
+        r = self.get('/api/v1.0/list/junctions')
         self.assertEqual(len(r),263)
         self.assertTrue([u'Whiddon Drive', u'A361'] in r)
 
