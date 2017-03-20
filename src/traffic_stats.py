@@ -29,7 +29,11 @@ def qualified_columns():
 
 ### Implementation of the API
 def find_road(road):
-    return [dictionary(traffic_columns(), row) for row in sql('select * from traffic where Road = ?', (road,))]
+    s = 'select ' + ','.join(qualified_columns()) + \
+        ''' from traffic, wards
+            where traffic.cp = wards.cp and Road = ?
+        '''
+    return [dictionary(all_columns(), row) for row in sql(s, (road,))]
 
 def find_ward(ward):
     s = 'select ' + ','.join(qualified_columns()) + \
