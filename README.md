@@ -1,10 +1,5 @@
 # API for browsing  traffic count and major road data #
 
-This README would normally document whatever steps are necessary to get your application up and running.
-
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
-
-
 ### Server code and documentation of API ###
 
 The links below all give information on traffic count and major road data. 
@@ -32,8 +27,21 @@ https://tinyurl.com/zozxpfb
 FAQ
 
 * Do I need to host it myself?: Yes, AWS, azure etc all offer free tiers. It will only need to be up for a week
-* Do I need to build a client?:  No, weâ€™re only after an API. 
+* Do I need to build a client?:  No, we’re only after an API. 
 * Do you need the code?:  Yes please, we would like to review it. Github, bitbucket, zipfile are all acceptable 
+
+
+### API Documentation ###
+
+The traffic statistics REST API http://trafficstatistics.uk/ 
+provides read only access to data available from Department for Transport
+https://www.dft.gov.uk/traffic-counts/about.php
+in particular AADF - Annual average daily flow. 
+
+Currently it serves only Devon data: http://api.dft.gov.uk/v2/trafficcounts/export/la/Devon.csv
+
+Metadata of the dataset is described here: http://data.dft.gov.uk/gb-traffic-matrix/aadf-majorroads-metadata.pdf
+
 
 ### How do I get set up? ###
 
