@@ -53,7 +53,7 @@ Currently the only possible error code of all API calls is `404 Not found`.
       "error": "Not found"
 }
 ```
-
+-----------------------
 **Filter**
 ----
   Returns JSON encoded records satisfying given criteria.
@@ -62,7 +62,11 @@ Currently the only possible error code of all API calls is `404 Not found`.
 
     `/api/v1.0/filter`
 
-*  **URL Params**
+*  **URL Parameters**
+
+None, the filter API accepts only query parameters.
+
+*  **Query Parameters**
 
 The only allowed parameters are the ones appearing in the dataset's metadata table below.
 Result will be a list of records that match the parameters.
@@ -98,7 +102,6 @@ ward     | ward
 district | district
 latitude | latitude
 longitude | longitude 
-
 
 *  **Example**
 
@@ -180,7 +183,27 @@ longitude | longitude
 
 
 
+-----------------------
+**Browse roads**
+----
+  Returns JSON encoded records for the given road. The format of the result is the same as for the filter API.
 
+* **URL**
+
+    `/api/v1.0/roads/:road`
+
+*  **URL Parameters**
+
+    None.
+
+*  **Query Parameters**
+
+`road` should be one of the roads availble via [/api/v1.0/list/roads](http://trafficstatistics.uk/api/v1.0/list/roads)
+
+
+
+-----------------------
+-----------------------
 
 ### How do I get set up? ###
 
