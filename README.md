@@ -77,7 +77,7 @@ Result will be a list of records that match the parameters.
 Parameter name  | Description
 ----------------|-------------------------
 AADFYear        | AADFs are shown for each year from 2000 onwards. 
-CP (count  point) | a unique  reference  for the road link that links  the  AADFs to the  road network. 
+CP (count point) | a unique  reference  for the road link that links  the  AADFs to the  road network. 
 Estimation_method | Estimation method 
 Estimation_method_detailed | Detailed description of the estimation method 
 LocalAuthority | Local authority  that the CP sits within
@@ -319,7 +319,7 @@ Simillar to the example response for the Filter API, see above.
 
 
 -----------------------
-*Get list of awards*
+*Get list of wards*
 ----
   Returns JSON encoded list of known wards.
 
@@ -458,17 +458,59 @@ Simillar to the example response for the Filter API, see above.
 ### How do I get set up? ###
 
 * Summary of set up
+
+The web app can run with sqlite3 and PostgreSQL. 
+Currently PostgreSQL is used in the production on an ec3 instance, sqlite3 in development and testing.
+
+The source code contains dump of the sqlite3 database in file `src/traffic.sql`.
+In development mode the app will load `src/traffic.sql` and create database in file '/tmp/trafic.sql' unless it already exists.
+
 * Configuration
+
+The app detects if it is in development or production mode based on value returned from function `development_mode` in module `src/config.py`.
+
+In my setup this is based on whether environment contains variable `EDITOR` or not (the variable is not set on ec2).
+This needs to be ammended according to local set up.
+
 * Dependencies
+
+Python module dependencies are listed in file `requirements.txt`.
+In production mode the app requires installed and running PostgreSQL. 
+
 * Database configuration
+
+The initial conversion of the CSV file to sqlite3 database was done with an online tool.
+The script `load_wards.py` creates an additional table `wards`.
+
+The script `sqlite3_to_postgresql.sh` can convert the sqlite3 dump of the database to a format that can be loaded into a PostgreSQL database.
+Details of the PostgreSQL database connection should be put in file PG_CONNECTION (not in source code repository).
+
+Note, most of the data is in one flat table. 
+It would be good to normalize the schema. 
+However, the data must be cleaned up first.
+There are numerous inconsistencies in the original dataset,
+like different spellings of the same road or junction,
+inconsistent use of abbreviations as well as ordinary typos.
+Some considerable effort is needed to clean up the data. 
+However, cleaning the data and redesigning the database should not 
+require any changes to the API and only small changes to the application's logic (SQL queries).
+
 * How to run tests
+
+Unit tests are in module `test.py`. To run the suite:
+
+```
+$ cd src
+$ python test.py
+```
+
 * Deployment instructions
 
-### Contribution guidelines ###
+The simplest way to run the app in development mode is:
 
-* Writing tests
-* Code review
-* Other guidelines
+```
+$ python traffic_stats.py
+```
 
 ### Who do I talk to? ###
 
