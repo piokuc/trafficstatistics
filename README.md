@@ -1,6 +1,6 @@
 # API for browsing  traffic count and major road data #
 
-### Server code and documentation of API ###
+### Requirements for server code and documentation of API ###
 
 The links below all give information on traffic count and major road data. 
 
@@ -32,6 +32,7 @@ FAQ
 
 -----------------------
 # API Documentation #
+## General information ##
 
 The traffic statistics REST API http://trafficstatistics.uk/ 
 provides read only access to annual average daily flow (AADF) data 
@@ -47,12 +48,14 @@ with keys being column names of the original CSV
 file and values corresponding to values in appropriate rows.
 Four additional keys are added: ward, district, latitude and longitude.
 
+## Error codes ##
 Currently the only possible error code of all API calls is `404 Not found`.
 ```
 {
       "error": "Not found"
 }
 ```
+
 -----------------------
 *Filter*
 ----
@@ -104,13 +107,16 @@ district | district
 latitude | latitude
 longitude | longitude 
 
-*  **Example**
+* ** Example **
 
     ` $ curl "http://trafficstatistics.uk/api/v1.0/filter?AADFYear=2015&ward=Yarty"`
                                  
-* **Code:** `200` 
+* ** Code ** 
 
-**Content:** 
+    `200` 
+
+* ** Response ** 
+
 ```
 [
   {
@@ -185,22 +191,63 @@ longitude | longitude
 
 
 -----------------------
-*Browse roads*
+*Browse traffic statistics by roads*
 ----
   Returns JSON encoded records for the given road. The format of the result is the same as for the filter API.
 
 * **URL**
 
-    `/api/v1.0/roads/:road`
+    `/api/v1.0/roads/{road}`
 
-*  **URL Parameters**
+* **URL Parameters**
 
     `road` should be one of the roads availble via [/api/v1.0/list/roads](http://trafficstatistics.uk/api/v1.0/list/roads)
 
-*  **Query Parameters**
+* **Query Parameters**
 
     None.
 
+* ** Example **
+
+    `$ curl "http://trafficstatistics.uk/api/v1.0/roads/M5" `
+                                 
+* ** Code ** 
+
+    `200` 
+
+* ** Response ** 
+
+Simillar to the example response for the Filter API, see above.
+
+
+-----------------------
+*Browse traffic statistics by wards*
+----
+  Returns JSON encoded records for the given ward. The format of the result is the same as for the filter API.
+
+* ** URL **
+
+    `/api/v1.0/wards/{ward}`
+
+* ** URL Parameters **
+
+    `ward` should be one of the wards availble via [/api/v1.0/list/wards](http://trafficstatistics.uk/api/v1.0/list/wards)
+
+* ** Query Parameters **
+
+    None.
+
+* ** Example **
+
+    `$ curl http://trafficstatistics.uk/api/v1.0/wards/Chulmleigh`
+                                 
+* ** Code ** 
+
+    `200` 
+
+* ** Response ** 
+
+Simillar to the example response for the Filter API, see above.
 
 
 -----------------------
