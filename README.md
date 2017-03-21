@@ -201,7 +201,7 @@ longitude | longitude
 
 * **URL Parameters**
 
-    `road` should be one of the roads availble via [/api/v1.0/list/roads](http://trafficstatistics.uk/api/v1.0/list/roads)
+    `road` should be one of the roads available via [/api/v1.0/list/roads](http://trafficstatistics.uk/api/v1.0/list/roads)
 
 * **Query Parameters**
 
@@ -460,10 +460,10 @@ Simillar to the example response for the Filter API, see above.
 * Summary of set up
 
 The web app can run with sqlite3 and PostgreSQL. 
-Currently PostgreSQL is used in the production on an ec3 instance, sqlite3 in development and testing.
+Currently PostgreSQL is used in the production on an ec2 instance, sqlite3 in development and testing.
 
 The source code contains dump of the sqlite3 database in file `src/traffic.sql`.
-In development mode the app will load `src/traffic.sql` and create database in file '/tmp/trafic.sql' unless it already exists.
+In development mode the app will load `src/traffic.sql` and create database in file `/tmp/traffic.sqlite` unless it already exists.
 
 * Configuration
 
