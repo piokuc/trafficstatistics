@@ -30,8 +30,8 @@ FAQ
 * Do I need to build a client?:  No, we’re only after an API. 
 * Do you need the code?:  Yes please, we would like to review it. Github, bitbucket, zipfile are all acceptable 
 
-
-### API Documentation ###
+-----------------------
+# API Documentation #
 
 The traffic statistics REST API http://trafficstatistics.uk/ 
 provides read only access to annual average daily flow (AADF) data 
@@ -54,7 +54,7 @@ Currently the only possible error code of all API calls is `404 Not found`.
 }
 ```
 -----------------------
-**Filter**
+*Filter*
 ----
   Returns JSON encoded records satisfying given criteria.
 
@@ -184,7 +184,7 @@ longitude | longitude
 
 
 -----------------------
-**Browse roads**
+*Browse roads*
 ----
   Returns JSON encoded records for the given road. The format of the result is the same as for the filter API.
 
@@ -194,15 +194,14 @@ longitude | longitude
 
 *  **URL Parameters**
 
-    None.
+    `road` should be one of the roads availble via [/api/v1.0/list/roads](http://trafficstatistics.uk/api/v1.0/list/roads)
 
 *  **Query Parameters**
 
-`road` should be one of the roads availble via [/api/v1.0/list/roads](http://trafficstatistics.uk/api/v1.0/list/roads)
+    None.
 
 
 
------------------------
 -----------------------
 
 ### How do I get set up? ###
