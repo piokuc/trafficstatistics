@@ -36,9 +36,7 @@ FAQ
 The traffic statistics REST API http://trafficstatistics.uk/ 
 provides read only access to annual average daily flow (AADF) data 
 available from [Department for Transport](https://www.dft.gov.uk/traffic-counts/about.php).
-
 Currently it serves only [Devon data](http://api.dft.gov.uk/v2/trafficcounts/export/la/Devon.csv).
-
 Full description of the orignal dataset's metadata is described [here](http://data.dft.gov.uk/gb-traffic-matrix/aadf-majorroads-metadata.pdf)
 
 API is read only and does not require any authentication. Only GET method is supported.
@@ -66,8 +64,41 @@ Currently the only possible error code of all API calls is `404 Not found`.
 
 *  **URL Params**
 
-The only allowed parameters are the ones appearing in the dataset's metadata table above.
+The only allowed parameters are the ones appearing in the dataset's metadata table below.
 Result will be a list of records that match the parameters.
+
+Parameter name  | Description
+----------------|-------------------------
+AADFYear        | AADFs are shown for each year from 2000 onwards. 
+CP (count  point) | a unique  reference  for the road link that links  the  AADFs to the  road network. 
+ONS GOR Name | the  former Government  Office  Region that the  CP sits within. 
+ONS LA Name | the  local authority  that the  CP sits within. 
+Road | this is the  road name  (for instance  M25 or A3). 
+RCat | the  classification of the  road type  (see data definitions for the full  list). 
+S Ref E | Easting coordinates of the CP location. 
+S Ref N | Easting coordinates of the CP location. 
+A-Junction | The  road name of the  start junction  of the  link 
+B-Junction | The  road name of the  end junction  of the  link 
+LenNet | Total length  of the  network  road link for that CP (in kilometres). 
+LenNet_miles | Total length  of the network  road link  for that CP (in miles). 
+FdPC | AADF for pedal cycles. 
+Fd2WMV | AADF for two-wheeled  motor vehicles. 
+FdCar | AADF for Cars and Taxis. 
+FdBus | AADF for Buses and Coaches 
+FdL GV | AADF for LGVs. 
+FdHGVR2 | AADF for two-rigid axle  HGVs. 
+FdHGVR3 | AADF for three-rigid axle  HGVs. 
+FdHGVR4 | AADF for four or more rigid axle  HGVs. 
+FdHGVA3 | AADF for three  or four-articulated  axle HGVs. 
+FdHGVA5 | AADF for five-articulated  axle  HGVs. 
+Fd HGVA6 | AADF for six-articulated  axle  HGVs. 
+FdHGV | AADF for all HGVs. 
+FdAll_MV | AADF for all motor vehicles. 
+ward     | ward
+district | district
+latitude | latitude
+longitude | longitude 
+
 
 *  **Example**
 
