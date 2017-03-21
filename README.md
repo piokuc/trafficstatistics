@@ -57,7 +57,7 @@ Currently the only possible error code of all API calls is `404 Not found`.
 ```
 
 -----------------------
-*Filter*
+*Filter records according to criteria*
 ----
   Returns JSON encoded records satisfying given criteria.
 
@@ -65,11 +65,11 @@ Currently the only possible error code of all API calls is `404 Not found`.
 
     `/api/v1.0/filter`
 
-*  **URL Parameters**
+* **URL Parameters**
 
 None, the filter API accepts only query parameters.
 
-*  **Query Parameters**
+* **Query Parameters**
 
 The only allowed parameters are the ones appearing in the dataset's metadata table below.
 Result will be a list of records that match the parameters.
@@ -250,6 +250,209 @@ Simillar to the example response for the Filter API, see above.
 Simillar to the example response for the Filter API, see above.
 
 
+-----------------------
+*Get list of major roads*
+----
+  Returns JSON encoded list of major roads.
+
+* ** URL **
+
+    `/api/v1.0/list/roads`
+
+* ** URL Parameters **
+
+    None
+
+* ** Query Parameters **
+
+    None.
+
+* ** Example **
+
+    `$ curl http://trafficstatistics.uk/api/v1.0/list/roads`
+                                 
+* ** Code ** 
+
+    `200` 
+
+* ** Response ** 
+
+```
+[
+    "A358", 
+    "A3126", 
+    "A3121", 
+    "A386", 
+    "A3123", 
+    "A384", 
+    "A379", 
+    "A38", 
+    "A3125", 
+    "A377", 
+    "A3122", 
+    "A396", 
+    "A3124", 
+    "A3015", 
+    "A383", 
+    "A382", 
+    "A35", 
+    "A399", 
+    "A303", 
+    "A385", 
+    "A388", 
+    "A381", 
+    "M5", 
+    "A30", 
+    "A390", 
+    "A39", 
+    "A3052", 
+    "A375", 
+    "A373", 
+    "A361", 
+    "A3072", 
+    "A380", 
+    "A376", 
+    "A3079"
+]
+
+```
+
+
+-----------------------
+*Get list of awards*
+----
+  Returns JSON encoded list of known wards.
+
+* ** URL **
+
+    `/api/v1.0/list/wards`
+
+* ** URL Parameters **
+
+    None
+
+* ** Query Parameters **
+
+    None.
+
+* ** Example **
+
+    `$ curl http://trafficstatistics.uk/api/v1.0/list/wards`
+                                 
+* ** Code ** 
+
+    `200` 
+
+* ** Response ** 
+
+[Shortened]
+
+```
+[
+    "Instow", 
+    "Axminster Town", 
+    "Cranmore", 
+    "Okehampton North", 
+    "Chudleigh", 
+    "Coly Valley", 
+    "Georgeham and Mortehoe", 
+    "Westexe", 
+    "Newport", 
+    "Burrator", 
+    "Pilton", 
+    "Haytor", 
+    "Witheridge", 
+    "Cadbury", 
+    "Bradley", 
+    "Monkleigh and Littleham", 
+    "College", 
+    "Exe Valley"
+]
+
+```
+
+
+-----------------------
+*Get list of junctions*
+----
+  Returns JSON encoded list of pairs: (StartJunction, EndJunction).
+
+* ** URL **
+
+    `/api/v1.0/list/junctions`
+
+* ** URL Parameters **
+
+    None
+
+* ** Query Parameters **
+
+    None.
+
+* ** Example **
+
+    `$ curl http://trafficstatistics.uk/api/v1.0/list/junctions`
+                                 
+* ** Code ** 
+
+    `200` 
+
+* ** Response ** 
+
+[Shortened]
+
+```
+[
+  [
+    "Sannerville Way Rndbt", 
+    "Glasshouse Lane"
+  ], 
+  [
+    "Sidmouth", 
+    "A3052"
+  ], 
+  [
+    "Station Rd", 
+    "A30 slip roads mid-junction"
+  ], 
+  [
+    "Stoke Hill", 
+    "A3072"
+  ], 
+  [
+    "Summer Lane", 
+    "B3179"
+  ], 
+  [
+    "Tamerton Rd roundabout", 
+    "B3212 roundabout"
+  ], 
+  [
+    "Tamerton Road roundabout", 
+    "B3212 roundabout"
+  ], 
+  [
+    "Telegraph Hill", 
+    "A38"
+  ], 
+  [
+    "Telegraph  Hill", 
+    "A38"
+  ], 
+  [
+    "Westaway Plain", 
+    "B3230"
+  ], 
+  [
+    "Whiddon Drive", 
+    "A361"
+  ], 
+  [
+    "Whiddon Drive", 
+    "A39(T)"
+  ]
+]
+```
 -----------------------
 
 ### How do I get set up? ###
