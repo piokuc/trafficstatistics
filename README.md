@@ -75,29 +75,30 @@ Parameter name  | Description
 ----------------|-------------------------
 AADFYear        | AADFs are shown for each year from 2000 onwards. 
 CP (count  point) | a unique  reference  for the road link that links  the  AADFs to the  road network. 
-ONS GOR Name | the  former Government  Office  Region that the  CP sits within. 
-ONS LA Name | the  local authority  that the  CP sits within. 
-Road | this is the  road name  (for instance  M25 or A3). 
-RCat | the  classification of the  road type  (see data definitions for the full  list). 
-S Ref E | Easting coordinates of the CP location. 
-S Ref N | Easting coordinates of the CP location. 
-A-Junction | The  road name of the  start junction  of the  link 
-B-Junction | The  road name of the  end junction  of the  link 
-LenNet | Total length  of the  network  road link for that CP (in kilometres). 
-LenNet_miles | Total length  of the network  road link  for that CP (in miles). 
-FdPC | AADF for pedal cycles. 
-Fd2WMV | AADF for two-wheeled  motor vehicles. 
-FdCar | AADF for Cars and Taxis. 
-FdBus | AADF for Buses and Coaches 
-FdL GV | AADF for LGVs. 
-FdHGVR2 | AADF for two-rigid axle  HGVs. 
-FdHGVR3 | AADF for three-rigid axle  HGVs. 
-FdHGVR4 | AADF for four or more rigid axle  HGVs. 
-FdHGVA3 | AADF for three  or four-articulated  axle HGVs. 
-FdHGVA5 | AADF for five-articulated  axle  HGVs. 
-Fd HGVA6 | AADF for six-articulated  axle  HGVs. 
-FdHGV | AADF for all HGVs. 
-FdAll_MV | AADF for all motor vehicles. 
+Estimation_method | Estimation method 
+Estimation_method_detailed | Detailed description of the estimation method 
+LocalAuthority | Local authority  that the CP sits within
+Road | this is the  road name  (for instance  M25 or A3) 
+RoadCategory | the  classification of the  road type  (see data definitions for the full  list). 
+Easting | Easting coordinates of the CP location. 
+Northing | Northing coordinates of the CP location. 
+StartJunction | The  road name of the  start junction  of the  link 
+EndJunction | The  road name of the  end junction  of the  link 
+LinkLength_km | Total length  of the  network  road link for that CP (in kilometres). 
+LinkLength_miles| Total length  of the network  road link  for that CP (in miles). 
+PedalCycles | AADF for pedal cycles. 
+Motorcycles | AADF for two-wheeled  motor vehicles. 
+CarsTaxi | AADF for Cars and Taxis. 
+BusesCoaches | AADF for Buses and Coaches 
+LightGoodsVehicles | AADF for LGVs. 
+V2AxleRigidHGV | AADF for two-rigid axle  HGVs. 
+V3AxleRigidHGV | AADF for three-rigid axle  HGVs. 
+V4or5AxleRigidHGV | AADF for four or more rigid axle  HGVs. 
+V3or4AxleArticHGV | AADF for three  or four-articulated  axle HGVs. 
+V5AxleArticHGV | AADF for five-articulated  axle  HGVs. 
+V6orMoreAxleArticHGV | AADF for six-articulated  axle  HGVs. 
+AllHGVs | AADF for all HGVs. 
+AllMotorVehicles | AADF for all motor vehicles. 
 ward     | ward
 district | district
 latitude | latitude
