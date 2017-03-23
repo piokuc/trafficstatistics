@@ -101,7 +101,9 @@ def documentation():
     return html.html(
         html.head(html.title('trafficstatistics.uk API documentation')),
         html.body(
-            html.h1("Traffic statistics API examples"),
+            html.h1("UK Traffic statistics (Devon only now)"),
+            html.a(href="https://bitbucket.org/piotrkuchta/trafficstatistics")("Source code repository and API documentation"),
+            html.h1("API examples"),
             ul(
                link("Browse data by road:",   "http://trafficstatistics.uk/api/v1.0/roads/M5"),
                link("Browse data by ward:",   "http://trafficstatistics.uk/api/v1.0/wards/Yeo"),
