@@ -1,4 +1,4 @@
-flask==1.0
+flask==2.3.2
 pyshp==1.2.10
 shapely
 pyproj
